@@ -16,10 +16,10 @@ app.use('/', express.static(path.join(__dirname, 'static')))
 app.use(bodyParser.json())
 
 app.post('/api/register', async (req, res) => {
-    const { username, password: plainTextPassword } = req.body
+    const { email, password: plainTextPassword } = req.body
 
-    if (!username || typeof username !== 'string') {
-        return res.json({ status: 'error', error: 'Invalid username' })
+    if (!email || typeof email !== 'string') {
+        return res.json({ status: 'error', error: 'Invalid email' })
     }
 
     if (!plainTextPassword || typeof plainTextPassword !== 'string') {
@@ -37,16 +37,15 @@ app.post('/api/register', async (req, res) => {
 
     try {
         const response = await User.create({
-            username, password
+            email, password
         })
         console.log('User created successfully: ', response)
     } catch (error) {
-        id(error.code === 11000){
+        if (error.code === 11000) {
             // duplicate key
-            return res.json({ status: 'error', error: 'Username already use' })
+            return res.json({ status: 'error', error: 'Email already use' })
         }
         throw error
-        return res.json({ status: 'error' })
     }
     res.json({ status: 'ok' })
 })

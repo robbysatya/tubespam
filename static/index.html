@@ -11,7 +11,7 @@
 <body>
     <h1>Register Form</h1>
     <form action="" id="reg-form">
-        <input type="text" id="username" autocomplete="off" placeholder="Username" />
+        <input type="email" id="email" autocomplete="off" placeholder="Email" />
         <input type="password" id="password" autocomplete="off" placeholder="Password" />
         <input type="submit" value="Submit Form" />
     </form>
@@ -23,7 +23,7 @@
         // send data as JSON
         async function registerUser(event) {
             event.preventDefault()
-            const username = document.getElementById('username').value
+            const email = document.getElementById('email').value
             const password = document.getElementById('password').value
 
             const result = await fetch('/api/register', {
@@ -32,11 +32,16 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username,
+                    email,
                     password
                 })
             }).then((res) => res.json())
-            console.log(result)
+
+            if (result.status === 'ok') {
+                alert('Success')
+            } else {
+                alert(result.error)
+            }
         }
     </script>
 </body>
